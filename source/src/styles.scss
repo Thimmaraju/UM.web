@@ -1,0 +1,479 @@
+/* You can add global styles to this file, and also import other style files */
+@import 'normalize';
+
+@import 'styles-reset';
+
+@import '~@angular/material/theming';
+
+@include mat-core();
+
+@import 'themes/default-theme.scss';
+
+@import '~@okta/okta-signin-widget/dist/css/okta-sign-in.min.css';
+@import '~@okta/okta-signin-widget/dist/css/okta-theme.css';
+
+@import 'app/app.component.scss';
+
+// this is a $cheap fix...real fix should be to make a text-area component that can be
+// controlled to limit sizability area
+textarea {
+  min-height: 75px;
+  max-height: 200px;
+}
+
+// field validation text was unreadable - this helps
+mat-error {
+  font-size:1.3rem;
+}
+
+pc-dashboard-viewer {
+  // overrides for horizontal scrollbars in ngx-datatables due to chrome rendering
+  // multiple vertical scrollbars and table width being fixed
+  .ngx-datatable .datatable-body {
+    overflow-x: hidden;
+  }
+}
+
+// https://github.com/angular/material2/issues/11609
+/** IE 11 fixes */
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+  /* IE10+ CSS styles go here */
+  /** IE 11 fixes */
+  .mat-select-panel {
+    min-width: inherit !important;
+  }
+  .cdk-overlay-pane {
+    display: block;
+  }
+}
+form label{
+  font-size: 18px;
+  }
+  form input.form-control{
+    font-size: 18px !important;
+    }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+  
+    }
+    .mat-elevation-z8 {
+      box-shadow: none;
+    }
+    .ocactionfooter {
+      position: fixed;
+      bottom: 0px;
+      z-index: 99;
+    }
+    .UserHeaderSearch {
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+    .AssignSites{
+      margin-top: 8px;
+      margin-bottom: 8px;
+      position: relative;
+      display: block;
+      width: 100%;
+      text-align: right;
+    }
+    .AssignSites oc-search-box {
+      width: 25% !important;
+    }
+    .container  {
+      margin-left: 10px;
+      margin-right: 10px;
+    }
+
+    .UserAuditLog{
+      margin-top: 8px;
+      margin-bottom: 8px;
+      position: relative;
+      display: block;
+      width: 100%;
+      text-align: right;
+    }
+    .UserAuditLog oc-search-box {
+      width: 25% !important;
+    }
+
+  span.searchBox input {
+  font-size: 18px !important;
+    }
+  
+    .table-container .table-body >div>div.togglebuttonc {
+    padding: 2px 10px 0 !important;
+    width: 15% !important;
+  }
+  .DivWidth50 {
+    width: 50%;
+    margin: 0 auto;
+  }
+  .DivWidth70 {
+    width: 70%;
+    margin: 0 auto;
+  }
+  .DivWidth80 {
+    width: 80%;
+    margin: 0 auto;
+  }
+  .userinfo{
+    height: 300px !important;
+  }
+  .nofacilitiesmsg{
+    text-align: left;
+    font-size: 14px;
+    padding: 3px;
+  }
+  .statuslabel{
+    font-size: 18px;
+    display: block;
+    padding-bottom: 0px;
+  }
+  .DivWidth80 {
+    width: 80%;
+    margin: 0 auto;
+  }
+  .btn {
+    text-transform: inherit;
+      padding-top: initial;
+      padding-bottom: initial;
+  }
+  .col .check-wrap{    
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+   width: 100%;
+   display: inline-block;
+  }
+  .col .check-wrap:hover{    
+    white-space: pre-wrap;
+    word-break: break-all;
+    overflow: visible;
+    text-overflow: ellipsis;
+   width: 100%;
+   background:#E7E7E7;
+  }
+
+  .col .roledesc .check-wrap{
+    display:inline;
+  }
+
+  .col .sitedesc .check-wrap{
+    display:inline;
+  }
+
+  .col .appstatus .check-wrap{
+    display:inline;
+  }
+
+  .togglebuttoncuserinfo{
+    font-size: 14px;
+    padding-top: 20px;
+  }
+  .statuscol{
+    float:left; 
+    min-width: 140px;
+  }
+
+  .togglebuttoncuserinforesetpass {
+    font-size: 12px;
+    padding-top:12px;
+  }
+
+  .dialogPopup .dialog-text {
+    min-height: 130px !important;
+}
+
+ button svg{
+   vertical-align: middle;
+ }
+ .table-container .col.width-username {
+   max-width: 19%;
+   width: 19%;
+   min-width: 19%;
+ }
+ .table-container .col.width-email {
+  max-width: 19%;
+  width: 19%;
+  min-width: 19%;
+}
+.table-container .col.width-firstname {
+  max-width: 19%;
+  width: 19%;
+  min-width: 19%;
+}
+.table-container .col.width-lastname {
+  max-width: 19%;
+  width: 19%;
+  min-width: 19%;
+}
+.table-container .col.width-status {
+  max-width: 15%;
+  width: 15%;
+  min-width: 15%;
+}
+.table-container .ovcontainer .table-body  {
+  overflow-y: scroll !important;
+
+}
+
+.table-container .col.width-event {
+  width: 20%;
+}
+.table-container .col.width-update {
+ max-width: 20%;
+}
+.table-container .col.width-changed {
+ max-width: 20%;
+}
+.table-container .col.width-time {
+ max-width: 20%;
+}
+
+.extramarginbottom{
+  margin-bottom:100px;
+}
+
+.dialogPopup .ocactionfooter{
+  display: contents !important;
+}
+
+.dialogPopup .ocactionfooter .ocrightalign {
+  display: inline;
+  float: right;
+  padding: 10px;
+}
+
+.dialogPopup .ocactionfooter .ocleftalign {
+  display: inline;
+  float: left;
+  padding: 10px;
+}
+
+.table-container .table-head .row {
+  margin-right: 15px !important;
+}
+
+.userrole .table-container .table-head .row {
+  margin-right: 15px !important;
+}
+
+.auditlog .table-container .table-head .row {
+  margin-right: 15px !important;
+}
+
+.notification-container .show {
+  margin-top: 25px !important;
+}
+.notification-container .hide {
+  margin-top: 25px !important;
+}
+.siteinfo .table-container .table-head .row {
+  margin-right: 15px !important;
+}
+
+.passwordreset button.ocbtn.secondary{
+  width: 370px !important;
+}
+
+.AssignSites button.ocbtn.secondary{
+  margin-right: 10px !important;
+}
+
+  @media only screen and (min-width: 768px) {
+    .col-md-1 {
+      flex: 0 0 8.33333333%;
+      max-width: 8.33333333%;
+    }
+    
+    .col-md-2 {
+      flex: 0 0 16.66666667%;
+      max-width: 16.66666667%;
+    }
+    
+    .col-md-3 {
+      flex: 0 0 25%;
+      max-width: 25%;
+    }
+    
+    .col-md-4 {
+      flex: 0 0 33.33333333%;
+      max-width: 33.33333333%;
+    }
+    
+    .col-md-5 {
+      flex: 0 0 41.66666667%;
+      max-width: 41.66666667%;
+    }
+    
+    .col-md-6 {
+      flex: 0 0 50%;
+      max-width: 50%;
+    }
+    
+    .col-md-7 {
+      flex: 0 0 58.33333333%;
+      max-width: 58.33333333%;
+    }
+    
+    .col-md-8 {
+      flex: 0 0 66.66666667%;
+      max-width: 66.66666667%;
+    }
+    
+    .col-md-9 {
+      flex: 0 0 75%;
+      max-width: 75%;
+    }
+    
+    .col-md-10 {
+      flex: 0 0 83.33333333%;
+      max-width: 83.33333333%;
+    }
+    
+    .col-md-11 {
+      flex: 0 0 91.66666667%;
+      max-width: 91.66666667%;
+    }
+    
+    .col-md-12 {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+    .col-md-3 input {
+      width: 92%;
+    }
+
+    
+    }
+    .col-md-6 input{
+      min-width: 330px !important;
+    }
+
+    .ocactionfooter {
+      position: fixed;
+      bottom: 0px;
+      width: 100%;
+    }
+    
+    .ocwindowfooter .ocactionfooter {
+      position: inherit;
+      width: 100%;
+    }
+
+    .width-common30{
+      width:30%;
+    }
+
+    .gridrightmarginheader{
+      width: 15% !important;
+    }
+
+    .siteName{
+      width: 23% !important;
+    }
+
+    .rolename{
+      width: 23% !important;
+    }
+    
+    .subnav {
+      padding-top: 5px;
+      padding-left: 15px;
+      padding-right: 15px;
+      margin-bottom: 5px;
+  }
+  
+  .subnav .col-back {
+      width: 74px;
+      padding: 6px 6px;
+      outline: 0;
+  }
+ 
+  .header-area h5:first-child {
+      font-weight: 400;
+      padding-top: 14px;
+      font-size: 18px;
+      margin: 0;
+  }
+  .subnav h5:last-child {
+    margin: 0;
+    padding: 0;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.mat-tab-label{ 
+    font-weight: 400 !important;
+    font-size: 18px !important;
+    padding: 16px 40px 18px !important;
+    height: 60px !important;
+    opacity: 0.7 !important;
+}
+
+.mat-tab-label-active{
+  background-color: #5e6a71 !important;
+  color: #fff !important;
+  opacity: unset !important;
+}
+
+.mat-tab-header {
+  border-bottom: 4px solid #5e6a71;
+  padding: 0;
+}
+
+.mat-tab-list {
+  margin: 0 0 0 10px !important;
+}
+
+.mat-tab-label .image-pending {
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEsAAABLCAYAAAA4TnrqAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAuIwAALiMBeKU/dgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAf3SURBVHic7ZxtbFtXGcf/z7HTLk2rMpVq68ZGgXagfehQoV8Ge1Hhw2jZCohMbCuxE1jU+iZqfB3aAgKiMQ3axnar2M4WtsR2maas06a9tbyIsg3GIAhKp7FpbCAQYwxVYqJbsyqxz8MHx5nj3Gvfl3Ov48m/T865z3meJ3+fe86555xr6tL0fQT8EA0gIIsfGx898nIjYjtB5NOJAwzsb3QizYAAgEYJJgNB8jumG0T5QyMEK8pic4oF+C9YMBBoXrEAfwWTUja3WIB/gslik7esMn4IFgg2cZ9VjdeCvWda1rwB82kAM14EDwbfA31WmXAktoWJjgFY5lM+SxpTscK7BtYz8XEAK70KXrDQspcShslePzQUlAFxP4D3+5yPXai3t3eFX8GCRoXrz5y9k4GrvQ5OBXLbsnimbeVXurTYXgK/QERPM8uTuXTyz0oSrGJRB9utDWyWEFMAAl4EXICkT+ZG439w6yas6dsYeBBAx1zRX5gwKSXnf5xJvurWf5nqb5Yki8PwQygAMqBmNMymE8eZ6QYA03NFVxDjOwGil0Oa/mhIi12rIs4Csbr69NtAuEaFYysEpFA2dchn4r+GFDcDKFQUCwA3Afx0KBI93tOvX+UmRqVYRIxvunFmF1Utq0xudPhJkMn/QPS5osQfQ1r0nq8ODnYY2tRhXqxQn34jgCudpbmIdwDIekYs1c/gc6lEnIkfNrksAOoV08VT3drAZru+321ZzFGnCRowTsDtqCNYwJtVBw5QYReAM6YWRBslxLNhTe+x41gAQHdEvwwgJZ0gAJDgyWw6MQ7ir8NCC1PNxMjIGSIeqGN2AQP3hSL6nVb9CgCQgm6Butn0m39fs/o5AMilkhO1BJPCu2fDbCr5AICpuoaEb4cisVEYTKOqKQnE+ILb5OZjM3721NDQ/IiUSyUnzG5JIk8fd1iQsDZgEe8KRfSD9cxE6XGBP+E6tTkk8YnqskbdkhOp4ZME/p0lY8JgKBKN1TIR55d3XA11qwocpLafG10wuiW9GA0XI9KWTYkOhTV9m6knkrRFSU4AGHh+PHXwdbPr1bekUDzPMqLYTg8DeNuiOTGQ7enbe4nRRQHQRlWJCeAn9Wwqb0lWOIM34+jw8DkQHrdRZW2BZ4/CoMMXYN6gLDPBT1oxK7cwEpKVxa4BM//Ujj2Btoa12M7qcgHCB5QkBJzOjiR/ZdU+m06Mr1+z+lkVseth1o/WgokP9PTsXVVZJqBoJVQwDtutMzQ05MvoONePmvalhjDWFVYUvlFZJACsMjG3w/Q5nH9IgR/vID5lvwr6OiOR+cYkoGDtihiPH8tkrI44DYGZ/uag2oUr0H57+Q8B68OqeSLAcbc+vEaA/+moInHkXR8qxJL8C7c+vIZJ/M9h1Q3hSGwLUBLLfCnDGq/n707+y6UP75E457QqC3kLUJqUulrQZ+BPbur7hZuHdmaxDQAEQboSiwBluydeIpkd7y8S+KM7ewfWCQZOu0mCwK+5qe8XAnShm/rBZeLTgjj4jBsnTPivm/q+IXCZm+rMtElkM4feAPMrTp1QaXNiycPMH3ZTn5g3ljo9IksPwE3Ox91UZoENovSBH3DqRLLw7WCGU7r27LkcwMWunDDWls7BjyR/D+CvTnwQ8ftcJeEDohD4rAI3q8pzD2Yg48QDMy5XkIinMHCDAjcr5ydqwXeCPwLwpgMnH1GQiGfMrUltV+CqOC/W+PjBt8D2Wxe57Di9RrYXOgGo6FffWvAIUAjMHgTh3zadXGK2wK+azs5O28tJDN6jKPxCse4fGTkLaf8od1EWVHSgdem46IPXhDR9IjwwYGlQ6e4b3ArQJkXhX1v0cJnLJI4y+KQtN0JJB2qVMM+Kl8J9sbq76JKLu5VFZbxi9CTOy4LyVgBv2HB0U+Xyqw9czMyP1GplO3sH1gG0Q1VAAr1quGxx75Ej/2GiHljfbu9YgQu+pCoxG4R5VrwQ2j24aLQLtNHXALSpCkSCpszf3UnFTzBzv1VnTNBh4SSKB1wKIZ8IafqDXZq2BgB6e/etBkhVxw4AM20zZ39b+92dTDLDoENWvBFwVVd/9DNqcnNEJ2H56dDuwe3nl83sh9oz/FNjY2PTdVcP8+n4PiKyNP8iSXehMa2rzKUQ8gliGlTplIFHAGsH2DibimtM+L4F2y1dffpt7lJTguHLEA6RKPIkYOO0Xz6V+C6Dw6izfkWMRHd//1p3+S0dGPxUeUPG1iJ+Pp3MscCn6iwWrpWy7R409nZUBslAovzZ9o5HfiRxiqZXbyLgAICiidkXw1pUab/RIF760EUr508yOtoeymaHzmfTif0sxWaz3WgG3RWORG90muVSgMB3VB5ecXUANj86/Hw+ndgO0HUAHsPCSWyQiSbD/VHfXm9RCQO/yaaTk5VlSk4L59LxZ3LpxA6IwBUA3cGg8u/LtLOkE12a/nkVcXxEMvEeAAsO23nWCXf3x64sFuVWIrqWS0/+w/l0/F43PsN9g9czy18qSrEWP8ilE9+qLlQ5H1nAxEj8RQAvAkgBQGc02o7Sl+PL0UgXTC2ffft7Rhc8E6uaY8lkM+wvngmCbh4bG5s1uuibWE3ANEPuuC99+B9mBk319ruHzDLRl/Ppw8/VMmqJVaJNMF9Xz6gl1hwM7Atres2f82uJVUE9wVpiVVFLsJZYBpgJ1hLLBCPBWmLVoFqwllh1qBSsNYO3wJxg+D/Nd7Wvk4e1UwAAAABJRU5ErkJggg==);
+  position: absolute;
+  display: inline-block;
+  background-size: 20px 20px;
+  width: 20px;
+  height: 20px;
+  top: 4px;
+  right: 4px;
+}
+
+.mat-tab-label-active .image-pending {
+  background-image: url(data:image/png;base64,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);
+  position: absolute;
+  display: inline-block;
+  background-size: 20px 20px;
+  width: 20px;
+  height: 20px;
+  top: 4px;
+  right: 4px;
+}
+
+.mat-tab-label .image-warning {
+  background-image: url(data:image/png;base64,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);
+  position: absolute;
+  display: inline-block;
+  background-size: 20px 20px;
+  width: 20px;
+  height: 20px;
+  top: 4px;
+  right: 4px;
+}
+
+img.ng-star-inserted {
+  width: 65%;
+  vertical-align: middle;
+  text-align: center;
+  padding-left: -1px;
+  margin-left: 10px;
+}
+
+.border{
+  border-bottom: 4px solid #5e6a71;
+    margin-bottom: 5px;
+    margin-top: 9px;
+}
+
+.form-status-image .image {
+  display: grid !important;
+}

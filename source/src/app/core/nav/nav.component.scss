@@ -1,0 +1,94 @@
+@import '~sass/abstracts/variables';
+
+:host(pc-nav) {
+  padding-top: 0;
+
+  header {
+    width: 100%;
+
+    nav {
+      align-items: center;
+      padding: 6px 16px;
+      color: white;
+      height: 6em;
+      background: $color-primary-slate;
+      width: 100%;
+      .mat-raised-button {
+        color: $color-white;
+        margin-right: 1em;
+
+        &.active {
+          color: mat-color($color-secondary-logo-dark-grey, default-contrast);
+          background-color: mat-color($color-secondary-logo-dark-grey);
+        }
+      }
+
+      .progress-bar {
+        display: flex;
+        align-content: center;
+        align-items: center;
+        height: 5px;
+      }
+
+      .product-name {
+        font: arial;
+        font-style: italic;
+        font-weight: bold;
+        font-size: 16px;
+        color: $color-white;
+        padding-right: 1em;
+        padding-left: 2em;
+      }
+      .user-name {
+        font: Segoe UI;
+        font-style: normal;
+        font-size: 16px;
+        color: $color-white;
+        padding-right: 1em;
+        padding-left: 1em;
+      }
+
+      .image-icon {
+        width: 20px;
+        height: 20px;
+      }
+
+      img {
+        vertical-align: middle;
+      }
+    }
+  }
+}
+
+
+
+@media (max-width: 680px) {
+  :host(pc-nav) {
+    padding-top: 0;
+    padding-bottom: 1em;
+
+    header {
+      position: relative;
+
+      nav {
+        height: 7em;
+        display: flex;
+        padding: 1em 2em 0;
+      }
+    }
+  }
+}
+
+@media (max-width: 425px) {
+  :host(app-nav) {
+    padding-bottom: 0;
+
+    header {
+      nav {
+        app-search-bar {
+          width: 75%;
+        }
+      }
+    }
+  }
+}

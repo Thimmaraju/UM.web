@@ -1,0 +1,84 @@
+
+@import '~@angular/material/theming';
+
+@include mat-core();
+
+$pc-gray: (
+    50 : #ecedee,
+    100 : #cfd2d4,
+    200 : #afb5b8,
+    300 : #8e979c,
+    400 : #768086,
+    500 : #5e6a71,
+    600 : #566269,
+    700 : #4c575e,
+    800 : #424d54,
+    900 : #313c42,
+    A100 : #93d7ff,
+    A200 : #60c4ff,
+    A400 : #2eb1ff,
+    A700 : #14a7ff,
+    contrast: (
+        50 : #000000,
+        100 : #000000,
+        200 : #000000,
+        300 : #000000,
+        400 : #ffffff,
+        500 : #ffffff,
+        600 : #ffffff,
+        700 : #ffffff,
+        800 : #ffffff,
+        900 : #ffffff,
+        A100 : #000000,
+        A200 : #000000,
+        A400 : #000000,
+        A700 : #000000,
+    )
+);
+
+$pc-green: (
+    50 : #edf7e5,
+    100 : #d2ecbf,
+    200 : #b4df94,
+    300 : #96d269,
+    400 : #80c848,
+    500 : #69be28,
+    600 : #61b824,
+    700 : #56af1e,
+    800 : #4ca718,
+    900 : #3b990f,
+    A100 : #d8ffc9,
+    A200 : #b3ff96,
+    A400 : #8eff63,
+    A700 : #7cff4a,
+    contrast: (
+        50 : #000000,
+        100 : #000000,
+        200 : #000000,
+        300 : #000000,
+        400 : #000000,
+        500 : #000000,
+        600 : #000000,
+        700 : #000000,
+        800 : #ffffff,
+        900 : #ffffff,
+        A100 : #000000,
+        A200 : #000000,
+        A400 : #000000,
+        A700 : #000000,
+    )
+);
+
+$pc-primary: mat-palette($pc-gray);
+$pc-accent: mat-palette($pc-green);
+$pc-warn: mat-palette($mat-red, A200);
+$pc-theme: mat-light-theme($pc-primary, $pc-accent);
+
+
+$pc-theme: mat-light-theme(
+    $pc-primary,
+    $pc-accent,
+    $pc-warn
+);
+
+@include angular-material-theme($pc-theme);

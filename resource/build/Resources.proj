@@ -1,0 +1,35 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	
+	<ItemGroup>
+		<ResourceFiles Include="$(ProjectBase)\resource\**\*.*"/>
+
+		<JsFiles Include="$(ProjectBase)\source\dist\**\*.*" />
+
+	</ItemGroup>
+
+		<Target Name="CopyResourceFiles">
+			<Copy
+				SourceFiles="@(ResouceFiles)"
+				DestinationFiles="@(ResourceFiles->'$(OutputFolder)\%(RecursiveDir)%(Filename)%(Extension)')"			/>
+			
+			<Message Text="Source Files  = @(JsFiles)" /> 
+			
+			<Message Text="Output Folder  = $(OutputFolder)" />
+			
+			<Copy
+				SourceFiles="@(JsFiles)"
+				DestinationFiles="@(JsFiles->'$(OutputFolder)\CAP-UserManagement.Web\%(RecursiveDir)%(Filename)%(Extension)')" />
+
+	  
+			<Copy
+				SourceFiles="@(MMSourceFiles)"
+				DestinationFiles="@(MMSourceFiles->'$(OutputFolder)\%(Name)%(Extension)')"/>
+    
+		</Target>
+		<Target Name="CopyTestFiles">
+			<Copy
+				SourceFiles="@(TestFiles)"
+				DestinationFiles="@(TestFiles->'$(OutputFolder)\Tests\%(RecursiveDir)%(Filename)%(Extension)')" />	
+		</Target>		
+		
+  </Project>

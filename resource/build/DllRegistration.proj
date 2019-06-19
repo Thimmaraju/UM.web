@@ -1,0 +1,22 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <ItemGroup>
+		<!--Add dlls for registration in this block
+		ex:
+		<Assemblies Include="$(LibraryPath)\3rd Party\assembly1.dll;$(LibraryPath)\3rd Party\assembly2.dll"/>
+		-->
+		
+    </ItemGroup>	
+	
+	<!--Do not modify this section-->
+	<Target Name="RegisterAssemblies" Condition="Exists(@(Assemblies))">
+        <RegisterAssembly
+            Assemblies="@(Assemblies)" />
+    </Target>
+	
+	<Target Name="UnregisterAssemblies" Condition="Exists(@(Assemblies))">
+        <UnregisterAssembly
+            Assemblies="@(Assemblies)" />
+    </Target>
+
+</Project>

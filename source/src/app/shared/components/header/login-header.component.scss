@@ -1,0 +1,15 @@
+.login-header {
+  background-color: #5e6a71;
+  height: 2in;
+
+  .logo-container {
+    height: 2in;
+    display: flex;
+    align-items: flex-end;
+
+    img {
+      padding-bottom: .23in;
+      width: 261px;
+    }
+  }
+}

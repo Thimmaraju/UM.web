@@ -1,0 +1,11 @@
+  {
+    "It 'should' block": {
+      "prefix": "itshould",
+      "body": [
+        "it('${1:should}', () => {",
+        "  $0",
+        "});"
+      ],
+      "description": "Shorthand for writing out an 'it' block in tests"
+    }
+  }

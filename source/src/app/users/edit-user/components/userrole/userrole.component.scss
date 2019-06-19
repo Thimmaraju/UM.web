@@ -1,0 +1,18 @@
+.table-body.flex-1{
+    position: relative !important;
+}
+
+.roletable th{
+    border-right: 1px solid #fff;
+    padding: 15px 10px 14px;
+    flex-direction: column;
+    max-width: 100%;
+    flex-basis: 0;
+    flex-grow: 1;
+
+}
+
+.roletable thead{
+    background: #97c0e6;
+    padding: 5px 0;
+}

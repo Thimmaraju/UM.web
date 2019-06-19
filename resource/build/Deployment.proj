@@ -1,0 +1,57 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <MSBuildCommunityPath>$(ToolsPath)\MSBuild.Community.Tasks\Build</MSBuildCommunityPath>
+    <MSBuildCommunityTasksLib>$(MSBuildCommunityPath)\MSBuild.Community.Tasks.dll</MSBuildCommunityTasksLib>
+    <SiteName>$(ProjectName)-$(ReleaseName)</SiteName>
+    <SiteInstallDir>C:\inetpub\wwwroot\$(SiteName)</SiteInstallDir>
+    <SiteSourceDir>$(OutputFolder)\_PublishedWebsites\MAI.SupplyChain.Web</SiteSourceDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SiteContent Include="$(SiteSourceDir)\**\*.*"/>
+  </ItemGroup>
+
+  <Target Name="CreateSite" DependsOnTargets="RemoveSite">
+   
+    <ModifyFileAttributes ReadOnlyFlag="false" Files="$(ResourcePath)\machineinfo.xml" />
+		   
+    <XmlUpdate XPath="/applications/IISSite[name='MAI.SupplyChain.JS']/root_location"
+               XmlFileName="$(ResourcePath)\machineinfo.xml"
+               Value="$(SourcePath)\SupplyChain.JS\web" />
+			   
+ 
+    <DeploySites machineInfoPath="$(ResourcePath)\machineinfo.xml" siteStarted="true"/>
+    <MakeDir Directories="$(SiteInstallDir)\bin" />
+  </Target>
+
+  <Target Name="RemoveSite">
+    <DeploySites machineInfoPath="$(ResourcePath)\machineinfo.xml" siteStarted="false"/>
+  </Target>
+
+  <Target Name="DeploySite" DependsOnTargets="RemoveSite">
+    <RemoveDir Directories="$(SiteInstallDir)" />
+    <Copy
+		  SourceFiles="@(SiteContent)"
+		  DestinationFiles="@(SiteContent->'$(SiteInstallDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <CallTarget Targets="CreateSite;ConfigureSite;RecycleSite"/>
+  </Target>
+
+  <Target Name="ConfigureSite" DependsOnTargets="">
+    <XmlUpdate
+            XPath="/configuration/applicationSettings/MAI.SupplyChain.Web.Properties.Settings/setting[@name='OrderingServiceUrl']/value"
+            XmlFileName="$(SiteInstallDir)\Web.Config"
+            Value="http://localhost:8011/"/>
+  </Target>
+
+  <Target Name="RecycleSite" >
+    <Exec Command="C:\Windows\System32\inetsrv\appcmd.exe stop site /site.name:$(SiteName)"/>
+    <Exec Command="C:\Windows\System32\inetsrv\appcmd.exe recycle apppool /apppool.name:$(SiteName)"/>
+    <Exec Command="C:\Windows\System32\inetsrv\appcmd.exe start site /site.name:$(SiteName)"/>
+  </Target>
+
+    <UsingTask TaskName="CBPBuildTasks.ModifyFileAttributes" AssemblyFile="$(ToolsPath)\CBPBuildTasks.dll" />
+	<UsingTask AssemblyFile="$(MSBuildCommunityTasksLib)" TaskName="MSBuild.Community.Tasks.XmlUpdate" />
+	<UsingTask TaskName="MAI.IIS.BuildTasks.DeploySites" AssemblyFile="$(LibraryPath)\2nd_Party\MAISiteConfiguration\MAI.IIS.BuildTasks.dll"/>
+</Project>
+

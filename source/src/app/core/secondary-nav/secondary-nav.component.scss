@@ -1,0 +1,12 @@
+@import '~sass/abstracts/variables';
+
+  nav {
+    color: white;
+    height: 4em;
+    background: $color-secondary-blue-green;
+    width: 100%;
+
+    .secondary-nav-container {
+      height: inherit;
+    }
+  }

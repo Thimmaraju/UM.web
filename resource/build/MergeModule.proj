@@ -1,0 +1,81 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <WiXBasePath>$(ToolsPath)\wix-3.5</WiXBasePath>
+    <MSBuildCommunityPath>$(ToolsPath)\MSBuild.Community.Tasks\Build</MSBuildCommunityPath>
+    <MSBuildCommunityTasksLib>$(MSBuildCommunityPath)\MSBuild.Community.Tasks.dll</MSBuildCommunityTasksLib>
+    <MergeModuleOutput>$(ArtifactsDir)\Build $(AppVersion)\MergeModule</MergeModuleOutput>
+	<WebFolder>$(OutputFolder)\CAP-UserManagement.Web</WebFolder>
+  </PropertyGroup>
+
+  <Target Name="GatherWXSFiles">
+
+    <Message Text="*** Creating WIX files to temp folder***" />
+
+    <MakeDir Directories="$(TempFolder)"/>
+	
+	<HeatDirectory
+		ToolPath="$(WiXBasePath)"
+		Directory="$(WebFolder)"
+		Template="module"
+		GenerateGuidsNow="true"
+		SuppressRootDirectory="true"
+		OutputFile="$(TempFolder)\PCWorkflowMM.wxs"/>
+    
+  </Target>
+
+	<Target Name ="ConfigureWXSFiles" DependsOnTargets="GatherWXSFiles">
+
+		<FileUpdate Files="$(TempFolder)\PCWorkflowMM.wxs"
+			Regex="PUT-MODULE-NAME-HERE"
+			ReplacementText="PCWorkflowMM" />
+		<FileUpdate Files="$(TempFolder)\PCWorkflowMM.wxs"
+			Regex="PUT-COMPANY-NAME-HERE"
+			ReplacementText="Aesynt Incorporated" />
+		<FileUpdate Files="$(TempFolder)\PCWorkflowMM.wxs"
+			Regex="1\.0\.0\.0"
+			ReplacementText="$(AppVersion)" />
+		<FileUpdate Files="$(TempFolder)\PCWorkflowMM.wxs"
+			Regex="Package Id=&quot;{.*?}&quot;"
+			ReplacementText="Package Id=&quot;5D6FF0AE-3CEE-4C7E-AA66-C862E3D997E9&quot;" />
+		
+	</Target>
+
+  <Target Name = "CreateObjectFiles" DependsOnTargets="ConfigureWXSFiles">
+
+    <ItemGroup>
+      <WIXTempFiles Include="$(TempFolder)\**\*.wxs"/>
+    </ItemGroup>
+
+    <Message Text="*** Creating Object files ***" />
+
+    <Candle
+			ToolPath="$(WiXBasePath)"
+			SourceFiles="@(WIXTempFiles)"
+			OutputFile="$(TempFolder)\"/>
+
+  </Target>
+
+  <Target Name = "BuildMergeModules" DependsOnTargets="CreateObjectFiles">
+
+    <ItemGroup>
+      <WIXObjectFiles Include="$(TempFolder)\**\*.wixobj"/>
+    </ItemGroup>
+
+    <Message Text="*** Creating Merge Module ***" />
+
+   
+    <Light
+			ToolPath="$(WiXBasePath)"
+			BaseInputPaths="$(WebFolder)"
+			ObjectFiles="$(TempFolder)\PCWorkflowMM.wixobj"
+			OutputFile="$(MergeModuleOutput)\CAP-UserManagement.Web.msm" />
+  </Target>
+
+  <UsingTask AssemblyFile="$(WiXBasePath)\WixTasks.dll" TaskName="Microsoft.Tools.WindowsInstallerXml.Build.Tasks.Candle" />
+  <UsingTask AssemblyFile="$(WiXBasePath)\WixTasks.dll" TaskName="Microsoft.Tools.WindowsInstallerXml.Build.Tasks.Light" />
+  <UsingTask AssemblyFile="$(WiXBasePath)\WixTasks.dll" TaskName="Microsoft.Tools.WindowsInstallerXml.Build.Tasks.HeatDirectory" />
+  <UsingTask AssemblyFile="$(MSBuildCommunityTasksLib)" TaskName="MSBuild.Community.Tasks.FileUpdate" />
+  <UsingTask AssemblyFile="$(MSBuildCommunityTasksLib)" TaskName="MSBuild.Community.Tasks.XmlUpdate" />
+
+</Project>

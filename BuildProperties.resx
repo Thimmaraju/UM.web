@@ -1,0 +1,125 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<!--Product Version Specific Parameters-->
+		<ProjectName>UserManagement.Web</ProjectName>
+		<ReleaseName>Trunk</ReleaseName>
+		<BaseVersion>2017.1127.0917</BaseVersion>
+		<SourceBranch>UserManagement.Web</SourceBranch>
+		<SitePort>4200</SitePort>
+		<JavascriptProjectName>CAP-UserManagement.Web</JavascriptProjectName>
+		<TeamCityBuildConfigurationId>PerformanceCenter_UserManagement_Commit</TeamCityBuildConfigurationId>
+		
+		<!--Global Product Parameters-->
+		<SourceProject>CAP-UserManagement.Web</SourceProject>
+		<AssemblyCompany>"Omnicell"</AssemblyCompany>
+		<AssemblyProduct>"CAP-UserManagement.Web"</AssemblyProduct>
+		<AssemblyCopyright>"Copyright (c) Omnicell"</AssemblyCopyright>
+		<CreateSDK>true</CreateSDK>
+
+			<!--Static Build Parameters-->
+		<ProjectBase>$(MSBuildProjectDirectory)</ProjectBase>
+		<Configuration>Release</Configuration>
+		<Platform>Any CPU</Platform>		
+		<LibraryPath>$(ProjectBase)\lib</LibraryPath>
+		<ResourcePath>$(ProjectBase)\resource</ResourcePath>
+		<SourcePath>$(ProjectBase)\source</SourcePath>
+		<InstallPath>$(ProjectBase)\install</InstallPath>
+		<ToolsPath>$(ProjectBase)\tools</ToolsPath>
+		<BuildTools>c:\BuildTools</BuildTools>
+		<RAMDiskDrive>B:\</RAMDiskDrive>
+		<RAMDiskOutputFolder>$(RAMDiskDrive)output</RAMDiskOutputFolder>
+		<OutputFolder>$(ProjectBase)\output</OutputFolder>
+		<DBDirectory Condition="Exists('$(RAMDiskDrive)')">$(RAMDiskOutputFolder)</DBDirectory>
+		<DBDirectory Condition="!Exists('$(RAMDiskDrive)')">$(OutputFolder)</DBDirectory>
+		<TempFolder>$(OutputFolder)\temp</TempFolder>
+		<BuildLocation>local</BuildLocation>		
+		<ReportFolder>$(OutputFolder)\BuildReport</ReportFolder>
+		<TestDBFolder>$(OutputFolder)\UnitTestDatabase</TestDBFolder>
+		<ArtifactsDir>$(ProjectBase)\Build\Release</ArtifactsDir>
+		<StarTeamServer>dev-source.robot-rx.com</StarTeamServer>
+		<StarTeamPort>49201</StarTeamPort>
+		<StarTeamUser>buildmaster</StarTeamUser>
+		<StarTeamPassword>buildmaster</StarTeamPassword>
+		<LoadCustomTargets>True</LoadCustomTargets>
+		<UseCustomCreateSDK>True</UseCustomCreateSDK>
+    <!--System Test Parameters-->
+    <CodeHealthConnectionString>Server=Dev-DB08;Database=CodeHealthMetrics;User Id=TestUser;Password=5ync1@@!;</CodeHealthConnectionString>
+    
+    <!--Tools declarations-->
+		<NunitConsole>"$(ToolsPath)\NUnit-2.5.7\bin\net-2.0\nunit-console.exe"</NunitConsole>
+		<SonarPath>$(ToolsPath)\sonar-runner-1.2\bin\sonar-runner.bat</SonarPath>
+		<OpenCoverPath>$(ToolsPath)\OpenCover\OpenCover.Console.exe</OpenCoverPath>
+		<GallioPath>$(ToolsPath)\Gallio\bin\Gallio.Echo.exe</GallioPath>
+		<GallioFramework>v4.0.30319</GallioFramework>
+		<StyleCopPath>$(ToolsPath)\StyleCop\v4.4\</StyleCopPath>
+		<SqlCmd>"C:\Program Files\Microsoft SQL Server\100\Tools\Binn\sqlcmd.exe"</SqlCmd>
+	    <CodeQualityPath>$(LibraryPath)\2nd_party\CodeQuality\SonarUploader.exe</CodeQualityPath>
+	    <CodeQualityUser>metricadmin</CodeQualityUser>
+	    <CodeQualityUserPassword>yw0wymA</CodeQualityUserPassword>
+	    <AssembliesToAnalyze>$(OutputFolder)\MAI.SupplyChain.Web.dll</AssembliesToAnalyze>
+
+    <ProxyAddress>http://maivm-cyblock:8080</ProxyAddress>
+    
+    <UnitTestAssemblyPattern>*.Web.Tests.dll</UnitTestAssemblyPattern>
+    <SystemTestAssemblyPattern>*.Web.SystemTests.dll</SystemTestAssemblyPattern>
+    <SonarServerAddress>http://maidevreports:9000/sonar</SonarServerAddress>
+    <SonarConnectionString>jdbc:jtds:sqlserver://dev-db08/sonar;SelectMethod=Cursor</SonarConnectionString>
+    <SonarUserName>sonar</SonarUserName>
+    <SonarPassword>sonar</SonarPassword>
+		<TeamCityServerName>maivm-ciapp</TeamCityServerName>
+		<TeamCityUserName>cireader</TeamCityUserName>
+		<TeamCityPassword>cireader</TeamCityPassword>
+		<NugetServerAddress>http://dev-nuget/nuget/nuget</NugetServerAddress>
+		<ProxyAddress>http://maivm-cyblock:8080</ProxyAddress>
+    
+		<!-- Combined property group to be passed to individual targets -->
+		<BuildProperties>
+      BranchName=$(BranchName);SourceProject=$(SourceProject);ProjectBase=$(ProjectBase);
+      BuildType=$(BuildType);Configuration=$(Configuration);Platform=$(Platform);
+      TempFolder=$(TempFolder);LibraryPath=$(LibraryPath);ResourcePath=$(ResourcePath);
+      SourcePath=$(SourcePath);InstallPath=$(InstallPath);ToolsPath=$(ToolsPath);
+      OutputFolder=$(OutputFolder);Configuration=$(Configuration);Platform=$(Platform);
+      ReportFolder=$(ReportFolder);TestDBFolder=$(TestDBFolder);ArtifactsDir=$(ArtifactsDir);
+      ProjectName=$(ProjectName);ReleaseName=$(ReleaseName);StoryTellerProject=$(StoryTellerProject);SitePort=$(SitePort);
+	  GallioFramework=$(GallioFramework)
+	  ProxyAddress=$(ProxyAddress);TeamCityServerName=$(TeamCityServerName);TeamCityUserName=$(TeamCityUserName);
+			TeamCityPassword=$(TeamCityPassword);NugetServerAddress=$(NugetServerAddress);
+    </BuildProperties>	
+	</PropertyGroup>
+        <!-- Begin - Nuget replacement for tools and lib -->
+        <ItemGroup>
+            <Package Include="IISExpress">
+                <Version>7.5.7600</Version>
+                <OutPut>tools</OutPut>
+                <OriginalLocation>tools\IISExpress\</OriginalLocation>
+            </Package>
+            <Package Include="MSBuild.Community.Tasks">
+                <Version>1.2.0.306</Version>
+                <OutPut>tools</OutPut>
+                <OriginalLocation>tools\MSBuild.Community.Tasks\</OriginalLocation>
+            </Package>
+            <Package Include="CBP">
+                <Version>1.0.0.0</Version>
+                <OutPut>tools</OutPut>
+                <OriginalLocation>tools</OriginalLocation>
+            </Package>
+            <Package Include="JsTestDriver">
+                <Version>1.3.4</Version>
+                <OutPut>tools</OutPut>
+                <OriginalLocation>tools\JsTestDriver\</OriginalLocation>
+            </Package>
+            <Package Include="JSHint">
+                <Version>1.0.0</Version>
+                <OutPut>tools</OutPut>
+                <OriginalLocation>tools\JSHint\</OriginalLocation>
+            </Package>
+            <Package Include="StyleCop">
+                <Version>4.4.0.14</Version>
+                <OutPut>tools</OutPut>
+                <OriginalLocation>tools\StyleCop\</OriginalLocation>
+            </Package>
+        </ItemGroup>
+        <!-- End - Nuget replacement for tools and lib -->
+	<ItemGroup>
+	</ItemGroup>
+</Project>

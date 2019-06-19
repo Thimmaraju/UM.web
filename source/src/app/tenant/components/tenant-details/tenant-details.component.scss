@@ -1,0 +1,14 @@
+@import '~sass/abstracts/variables';
+
+.facility-context {
+
+  &__facility-name {
+    font-size: 1.8rem;
+    color: $color-white;
+    border: 1;
+    width: 100%;
+    text-align: left;
+    margin-top: 2px;
+  }
+
+}

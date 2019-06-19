@@ -1,0 +1,81 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<MSBuildCommunityPath>$(ToolsPath)\MSBuild.Community.Tasks\Build</MSBuildCommunityPath>
+		<MSBuildCommunityTasksLib>$(MSBuildCommunityPath)\MSBuild.Community.Tasks.dll</MSBuildCommunityTasksLib>		
+		<ArtifactRoot>\\dev-bldmckcc\build\SupplyChain.Web\8.1.0</ArtifactRoot>		
+		<ArtifactPath></ArtifactPath>
+		<CodeHealthConnectionString>Server=Dev-DB08;Database=CodeHealthMetrics;User Id=TestUser;Password=5ync1@@!;</CodeHealthConnectionString> 
+	</PropertyGroup>
+		
+	<!--All operations must use the $(ExecutionWorkingDir) which is defined as the $(OutputFolder) folder in the \BuildProperties.resx-->
+	<Target Name="TearDown">
+    <MSBuild Projects="$(ResourcePath)\Build\Deployment.proj" Targets="RemoveSite" Properties="$(BuildProperties)"/>
+  </Target>
+  
+  <!--All operations must use the $(ExecutionWorkingDir) which is defined as the $(OutputFolder) folder in the \BuildProperties.resx-->
+  <Target Name="Setup">
+    <!-- Spin up all web services -->
+    <MSBuild Projects="$(ResourcePath)\Build\Deployment.proj"
+        Targets="CreateSite"
+        Properties="$(BuildProperties)"/>
+    <Exec Command="sqlcmd -E -S . -i &quot;USE [orderingdb] ALTER USER [mah_pgh\maidevsvc] WITH DEFAULT_SCHEMA=[dbo] EXEC sp_addrolemember N'db_owner', N'mah_pgh\maidevsvc' EXEC sp_change_users_login 'Auto_Fix', 'mah_pgh\maidevsvc'&quot;" IgnoreExitCode="true"/>
+  </Target>
+  
+  <Target Name="ExecuteTests" DependsOnTargets="UpdateTestFiles">
+    		<Exec Command='"$(ExecutionWorkingDir)\StoryTellerConsole.exe" "$(ExecutionWorkingDir)\SupplyChainWeb.xml" /html:"$(ExecutionWorkingDir)\Results\$(AppVersion)\Results.html" /sql:"$(CodeHealthConnectionString)" /release:$(ReleaseName) /project:$(ProjectName) /build:$(AppVersion)'
+              IgnoreExitCode="False"
+              WorkingDirectory="$(ExecutionWorkingDir)"/>
+
+    <OnError ExecuteTargets="TearDown" />
+	</Target>
+
+  <Target Name="UpdateTestFiles">
+  </Target>
+
+	<!--Configuration Mananger Targets-->
+	<!--Do Not Modify-->
+	
+	<Target Name="CIBuild" DependsOnTargets="ConsumeDependencies;StartLogMan;Setup;ExecuteTests;TearDown;StopLogMan">
+		<OnError ExecuteTargets="StopLogMan" />
+	</Target>
+	
+	<Target Name= "ConsumeDependencies" DependsOnTargets="DefineWorkingDirectory;GetLatestArtifacts">
+
+		<Exec Command='sqlcmd -E -S . -Q "DROP DATABASE SystemTestDB_$(ReleaseName)"' IgnoreExitCode="false"/>
+		<RemoveDir Directories="$(ExecutionWorkingDir)" />
+		<MakeDir Directories="$(ExecutionWorkingDir)"/>
+		<!--Copy new Libraries-->
+		<Unzip ZipFileName="$(ArtifactPath)\InternalTools\SupplyChain_AT.zip" TargetDirectory="$(ExecutionWorkingDir)"/>
+
+	</Target>
+	
+	<Target Name= "StartLogMan">
+	</Target>	
+	
+	<Target Name= "StopLogMan">
+	</Target>	
+	
+	<Target Name="GetLatestArtifacts" Condition="$(ArtifactPath)==''" >
+		<GetLatestBuildArtifacts ArtifactRoot="$(ArtifactRoot)">
+			<Output TaskParameter="LatestArtifactPath" PropertyName="ArtifactPath" />
+			<Output TaskParameter="ApplicationVersion" PropertyName="AppVersion" />
+		</GetLatestBuildArtifacts>
+	</Target>
+	
+	<Target Name="DefineWorkingDirectory" Condition="'$(ExecutionWorkingDir)' == ''">	
+		<PropertyGroup>
+			<ExecutionWorkingDir>$(ProjectBase)\</ExecutionWorkingDir>
+		</PropertyGroup>	
+	</Target>
+
+	<UsingTask AssemblyFile="$(MSBuildCommunityTasksLib)" TaskName="MSBuild.Community.Tasks.XmlUpdate" />
+	<UsingTask AssemblyFile="$(MSBuildCommunityTasksLib)" TaskName="MSBuild.Community.Tasks.FileUpdate" />
+	<UsingTask AssemblyFile="$(MSBuildCommunityTasksLib)" TaskName="MSBuild.Community.Tasks.Zip" />
+  <UsingTask AssemblyFile="$(ToolsPath)\dbdeploy.net\bin\MSBuild.Dbdeploy.Task.dll" TaskName="MSBuild.Dbdeploy.Task.Dbdeploy" />
+	<UsingTask TaskName="McKessonBuildExtensions.GetBuildVersion" AssemblyFile="$(ToolsPath)\McKessonBuildExtensions.dll"/>
+	<UsingTask TaskName="McKessonBuildExtensions.GetLatestBuildArtifacts" AssemblyFile="$(ToolsPath)\McKessonBuildExtensions.dll"/>
+	<UsingTask AssemblyFile="$(MSBuildCommunityTasksLib)" TaskName="MSBuild.Community.Tasks.Unzip" />
+	<UsingTask TaskName="CodeHealthTasks.RunWithCodeCoverage" AssemblyFile="$(ToolsPath)\CodeHealthTasks.dll"/>
+	<UsingTask TaskName="CodeHealthTasks.ParseCodeCoverage" AssemblyFile="$(ToolsPath)\CodeHealthTasks.dll"/>
+  <UsingTask AssemblyFile="$(ToolsPath)\CBPBuildTasks.dll" TaskName="CBPBuildTasks.ModifyFileAttributes" />
+</Project>

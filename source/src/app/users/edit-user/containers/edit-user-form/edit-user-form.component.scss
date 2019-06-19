@@ -1,0 +1,106 @@
+//style for invalid form fields
+textarea.ng-invalid, input.ng-invalid {
+    border: 1px solid red;
+}
+
+input::-ms-clear {
+    display: none;
+}
+input, textarea, button {
+    font-family: inherit;
+}
+
+.form-control:disabled {
+    cursor: default;
+}
+
+.btn.disabled, .btn:disabled {
+    cursor: default;
+}
+
+h5 {
+    font-weight: normal;
+}
+
+.form-group, h2 {
+    padding: 0px 50px;
+    padding-top: 20px;
+}
+
+.form-group label {
+    padding: 6px 0;
+}
+
+.form-contact {
+    display: flex;
+    position: absolute !important;
+    left: 20px;
+}
+
+.left-align {
+    padding-left: 70px;
+}
+
+.top-align {
+    padding-top: 20px;
+}
+
+
+.edit-button {
+    margin-top: 5px;
+    background: url('/assets/images/edit.svg');
+    background-repeat: no-repeat;
+    height: 45px;
+    width: 45px;
+    cursor: pointer;
+}
+
+input[type=text]{
+    height: 50px;
+    max-width: 460px;
+    min-width: 360px;
+}
+
+.form-control {
+    color: #333333;
+    display: block;
+    width: 100%;
+    padding: .5rem .75rem;
+    font-size: 1.125rem;
+    line-height: 1.25;
+    color: #999;
+    background-color: #fff;
+    background-image: none;
+    background-clip: padding-box;
+    border: 1px solid #5e6a71;
+    border-radius: 4px;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+#border {
+    border-bottom: 4px solid #5E6A71;
+    margin-bottom: 5px;
+}
+
+.email-text {
+    background: white;
+    border-width: 0px;
+    min-width: 460px !important;
+    padding: 15px;
+}
+
+.email-text::-ms-clear {
+    display: none;
+}
+
+.email-enter {
+    display: flex;
+    padding: 0px 10px;
+}
+
+input.form-control {
+    height: 50px;
+    color: #333333;
+    font-family: "Segoe UI","Helvetica Neue";
+}
+

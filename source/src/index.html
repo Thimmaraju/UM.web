@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>User Management</title>
+  <base href="/">
+  <script>
+    if (global === undefined) {
+      var global = window;
+    }
+  </script>
+  <script>
+    __Zone_enable_cross_context_check = true;
+    </script>
+  <style type="text/css">
+    .loader-container {
+      display: flex;
+      height: 100%;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      width: 100%;
+      margin: -8px;
+      /* account for body margin */
+    }
+
+    .loading {
+      width: 80px;
+      height: 80px;
+      position: relative;
+      margin-top: 50px;
+    }
+
+    .loader-label {
+      position: absolute;
+      transform: translateX(-50%) translateY(-140%);
+      left: 50%;
+      opacity: 0.5;
+      font-size: 3.1rem;
+      text-align: center;
+    }
+
+    .inner-bounce,
+    .outer-bounce {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background-color: #3b990f;
+      opacity: 0.6;
+      position: absolute;
+      top: 0;
+      left: 0;
+      animation: open-bounce 2.0s infinite ease-in-out;
+    }
+
+    .outer-bounce {
+      -webkit-animation-delay: -1.0s;
+      animation-delay: -1.0s;
+    }
+
+    @keyframes open-bounce {
+
+      0%,
+      100% {
+        transform: scale(0.0);
+        -webkit-transform: scale(0.0);
+      }
+
+      50% {
+        transform: scale(1.0);
+        -webkit-transform: scale(1.0);
+      }
+    }
+  </style>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" async defer rel="stylesheet">
+</head>
+
+<body>
+  <app-root>
+    <section class="loader-container">
+      <aside class="loader-label">Loading...</aside>
+      <div class="loading">
+        <div class="inner-bounce"></div>
+        <div class="outer-bounce"></div>
+      </div>
+    </section>
+  </app-root>
+</body>
+
+</html>

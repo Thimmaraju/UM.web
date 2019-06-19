@@ -1,0 +1,31 @@
+.dialog-header {
+  background:#424242;
+  color: #fff;
+  padding: 11px 20px;
+  position: relative;
+  margin: -24px;
+
+  .title {
+    color:#fff;
+  }
+
+  .mat-icon {
+    vertical-align: middle;
+  }
+
+  .mat-icon-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+  }
+}
+
+.dialog-content {
+  margin-top: 24px;
+  padding: 24px;
+  font-size: 1.3rem;
+
+  .full-width {
+    width: 100%;
+  }
+}

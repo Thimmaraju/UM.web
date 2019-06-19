@@ -1,0 +1,288 @@
+// Variables
+$white:  #fff !default;
+$blue:   #0275d8 !default;
+$gray-light: #636c72 !default;
+$gray-dark: #292b2c !default;
+$brand-primary:  $blue !default;
+
+$font-family-sans-serif: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !default;
+$font-family-serif:      Georgia, "Times New Roman", Times, serif !default;
+$font-family-monospace:  Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
+$font-family-base:       $font-family-sans-serif !default;
+$font-size-base: 1rem !default;
+$font-weight-normal: normal !default;
+$font-weight-bold: bold !default;
+$font-weight-base: $font-weight-normal !default;
+$text-muted: $gray-light !default;
+$line-height-base: 1.5 !default;
+
+$body-bg:       $white !default;
+$body-color:    $gray-dark !default;
+$dt-font-weight: $font-weight-bold !default;
+
+$link-color:            $brand-primary !default;
+$link-decoration:       none !default;
+$link-hover-color:      darken($link-color, 15%) !default;
+$link-hover-decoration: underline !default;
+
+$table-cell-padding:            .75rem !default;
+$table-sm-cell-padding:         .3rem !default;
+$table-bg:                      transparent !default;
+$cursor-disabled:                not-allowed !default;
+
+html {
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+//
+// Reset HTML, body, and more
+//
+
+html {
+  -ms-overflow-style: scrollbar;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+body {
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  font-weight: $font-weight-base;
+  line-height: $line-height-base;
+  color: $body-color;
+  background-color: $body-bg;
+  margin: 0;
+  height: 100%;
+}
+
+[tabindex="-1"]:focus {
+  outline: none !important;
+}
+
+
+//
+// Typography
+//
+
+// Remove top margins from headings
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  margin-bottom: .5rem;
+}
+
+// Reset margins on paragraphs
+p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+// Abbreviations
+abbr[title],
+abbr[data-original-title] {
+  cursor: help;
+}
+
+address {
+  margin-bottom: 1rem;
+  font-style: normal;
+  line-height: inherit;
+}
+
+ol,
+ul,
+dl {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+ol ol,
+ul ul,
+ol ul,
+ul ol {
+  margin-bottom: 0;
+}
+
+dt {
+  font-weight: $dt-font-weight;
+}
+
+dd {
+  margin-bottom: .5rem;
+  margin-left: 0; // Undo browser default
+}
+
+blockquote {
+  margin: 0 0 1rem;
+}
+
+
+//
+// Links
+//
+
+a {
+  color: $link-color;
+  text-decoration: $link-decoration;
+  &:focus,
+  &:hover {
+    color: $link-hover-color;
+    text-decoration: $link-hover-decoration;
+  }
+}
+
+a:not([href]):not([tabindex]) {
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    color: $link-hover-color;
+    text-decoration: $link-hover-decoration;
+  }
+
+  &:focus {
+    outline: 0;
+  }
+}
+
+
+//
+// Code
+//
+
+pre {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  overflow: auto;
+}
+
+
+//
+// Figures
+//
+
+figure {
+  margin: 0 0 1rem;
+}
+
+
+//
+// Images
+//
+
+img {
+  vertical-align: middle;
+}
+
+
+[role="button"] {
+  cursor: pointer;
+}
+
+
+a,
+area,
+button,
+[role="button"],
+input,
+label,
+select,
+summary,
+textarea {
+  touch-action: manipulation;
+}
+
+
+//
+// Tables
+//
+
+table {
+  border-collapse: collapse;
+  background-color: $table-bg;
+}
+
+caption {
+  padding-top: $table-cell-padding;
+  padding-bottom: $table-cell-padding;
+  color: $text-muted;
+  text-align: left;
+  caption-side: bottom;
+}
+
+th {
+  text-align: left;
+}
+
+
+//
+// Forms
+//
+
+label {
+  display: inline-block;
+  margin-bottom: .5rem;
+  margin: 0;
+}
+
+button:focus {
+  outline: 1px dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+}
+
+input,
+button,
+select,
+textarea {
+  line-height: inherit;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+  &:disabled {
+    cursor: $cursor-disabled;
+  }
+}
+
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"],
+input[type="month"] {
+  -webkit-appearance: listbox;
+}
+
+textarea {
+  resize: vertical;
+}
+
+fieldset {
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+legend {
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin-bottom: .5rem;
+  font-size: 1.5rem;
+  line-height: inherit;
+}
+
+input[type="search"] {
+  -webkit-appearance: none;
+}
+
+output {
+  display: inline-block;
+}
+
+[hidden] {
+  display: none !important;
+}

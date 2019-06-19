@@ -1,0 +1,40 @@
+<mat-sidenav-container>
+
+  <mat-sidenav #sidenav mode="push">
+    <mat-toolbar color="primary">
+      <div class="branding">
+        <img [src]="logo">
+      </div>
+    </mat-toolbar>
+    <mat-nav-list *ngIf="(isLoggedIn | async)">
+      <a id="Nav{{item.icon | titlecase | trim: true}}Button" mat-list-item *ngFor="let item of navigation" (click)="sidenav.close()" [routerLink]="[item.link]"
+        routerLinkActive="active">
+        <mat-icon *ngIf="item.icon">{{ item.icon }}</mat-icon> {{ item.label}}
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <div class="wrapper">
+    <div class=header-container *ngIf="(isLoggedIn | async)">
+      <mat-toolbar color="primary" fxShow [fxShow.xs]="true" [fxShow.sm]="true" [fxShow.gt-md]="false">
+        <button id="OpenSideNavButton" mat-icon-button (click)="sidenav.open()">
+          <mat-icon>menu</mat-icon>
+        </button>
+
+        <span class="branding spacer text-center">
+          <img [src]="logo" /> User Management
+        </span>
+      </mat-toolbar>
+
+      <div class="fixed-header">
+        <pc-nav fxShow [fxShow.xs]="false" [fxShow.sm]="false" [fxShow.md]="false"></pc-nav>
+        <pc-secondary-nav *ngIf="(isLoggedIn | async)"></pc-secondary-nav>
+      </div>
+    </div>
+    <div class="content" [ngClass]="{'with-header': (isLoggedIn | async)}" [@routerTransition]="o.isActivated && o.activatedRoute.routeConfig.path">
+      <ng-progress></ng-progress>
+      <router-outlet #o="outlet"></router-outlet>
+    </div>
+  </div>
+
+</mat-sidenav-container>

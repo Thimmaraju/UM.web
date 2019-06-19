@@ -1,0 +1,159 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Import Project="CustomProperties.resx" Condition="Exists('CustomProperties.resx')" />
+	<!-- Any Targets set in this file will override the framework Targets with the same name -->
+	<Target Name="CompileCode" DependsOnTargets="CleanOutput;UpdateVersionProperties;CompileDevCode">
+		<Message Text="*** CompileCode complete ***" />
+	</Target>
+	<Target Name="CompileDevCode" >
+		<Message Text="Source Path = $(SourcePath)" />
+		<Exec Command='npm run ng-high-memory' IgnoreExitCode="False" WorkingDirectory="$(SourcePath)"/>
+		<Exec Command='ng lint' IgnoreExitCode="False" WorkingDirectory="$(SourcePath)"/>
+		<Exec Command='ng test --karma-config karma.teamcity.conf.js --browsers ChromeHeadless --watch false' IgnoreExitCode="False" WorkingDirectory="$(SourcePath)"/>
+		<Exec Command='ng build --c=octopus --prod --aot --build-optimizer --vendor-chunk --common-chunk' IgnoreExitCode="False" WorkingDirectory="$(SourcePath)"/>
+		<OnError ExecuteTargets="UnRegisterDLLs" /> 
+	</Target>	
+	
+	<Target Name="UnRegisterDlls">
+		<MSBuild Projects="$(ResourcePath)\Build\DllRegistration.proj"
+			Targets="UnregisterAssemblies"
+            Properties="$(BuildProperties)"/>	
+	</Target>
+	
+	<Target Name="UpdateVersionProperties" DependsOnTargets="GetSemanticBuildVersion;GetBuildVersion">
+		<!--Target to modify productinfo and assemblyinfo files with the proper assembly information-->
+        <Message Text="Using semantic versioning to version product" Condition="'$(UseSemVer)' == 'True'" />
+		<XmlUpdate XmlFileName="$(ProjectBase)\%(IsmFiles.Identity)" 
+			XPath="/msi/table[@name=&quot;Property&quot;]/row/td[text()=&quot;ProductVersion&quot;]/following-sibling::td[1]" 
+			Value="$(ProductVersion)"
+			Condition="'$(BuildLocation)'=='INTEG' AND Exists('%(IsmFiles.Identity)')" />
+			
+		<XmlUpdate XmlFileName="$(ProjectBase)\%(IsmFiles.Identity)" 
+			XPath="/msi/table[@name=&quot;Directory&quot;]/row/td[text()=&quot;INSYTE&quot;]/following-sibling::td[1][text()=&quot;AESYNT&quot;]/following-sibling::td[1]"
+			Value="Insyte-$(ProductVersion)"
+			Condition="'$(BuildLocation)'=='INTEG' AND %(IsmFiles.Identity) == 'ACE.ism'" />
+		<XmlUpdate XmlFileName="$(ProjectBase)\%(IsmFiles.Identity)" 
+			XPath="/msi/table[@name=&quot;Directory&quot;]/row/td[text()=&quot;SUPPLYCHAIN_WEB&quot;]/following-sibling::td[2]"
+			Value="Insyte-$(ProductVersion)"
+			Condition="'$(BuildLocation)'=='INTEG' AND %(IsmFiles.Identity) == 'SupplyChainWeb.ism'" />
+		
+		<XmlUpdate XmlFileName="$(VersionList)" XPath="/VersionRecord/@verMajor" Value="$(ProductVersion.Split('.').get(0))" Condition="'$(BuildLocation)'=='INTEG' AND Exists('$(VersionList)')" />
+		<XmlUpdate XmlFileName="$(VersionList)" XPath="/VersionRecord/@verMinor" Value="$(ProductVersion.Split('.').get(1))" Condition="'$(BuildLocation)'=='INTEG' AND Exists('$(VersionList)')" />
+		<XmlUpdate XmlFileName="$(VersionList)" XPath="/VersionRecord/@verInterim" Value="$(ProductVersion.Split('.').get(2))" Condition="'$(BuildLocation)'=='INTEG' AND Exists('$(VersionList)')" />
+		<FileUpdate Files="$(ProjectBase)\BuildProperties.resx" Regex="&lt;BaseVersion&gt;.*?&lt;/BaseVersion&gt;" ReplacementText="&lt;BaseVersion&gt;$(ProductVersion.Split('.').get(0)).$(ProductVersion.Split('.').get(1)).$(ProductVersion.Split('.').get(2))&lt;/BaseVersion&gt;" Condition="'$(BuildLocation)'=='INTEG' AND '$(ProductVersion)'!='' AND Exists('$(ProjectBase)\BuildProperties.resx')" />
+		<FileUpdate Files="$(ProjectBase)\BuildProperties.resx" Regex="&lt;ProductVersion&gt;.*?&lt;/ProductVersion&gt;" ReplacementText="&lt;ProductVersion&gt;$(ProductVersion)&lt;/ProductVersion&gt;" Condition="'$(BuildLocation)'=='INTEG' AND '$(ProductVersion)'!='' AND Exists('$(ProjectBase)\BuildProperties.resx')" />
+		<FileUpdate Files="$(ResourcePath)\machineinfo.xml" Regex="&lt;instanceName&gt;.*?&lt;/instanceName&gt;" ReplacementText="&lt;instanceName&gt;$(ProductVersion)&lt;/instanceName&gt;" Condition="'$(BuildLocation)'=='INTEG' AND Exists('$(ResourcePath)\machineinfo.xml')" />
+		<FileUpdate Files="$(ResourcePath)\machineinfo.xml" Regex="&lt;root_location&gt;.*?\\Insyte-.*?\\" ReplacementText="&lt;root_location&gt;C:\Program Files (x86)\Aesynt\Insyte-$(ProductVersion)\" Condition="'$(BuildLocation)'=='INTEG' AND Exists('$(ResourcePath)\machineinfo.xml')" />
+		<FileUpdate Files="$(ResourcePath)\SiteConfig.xml" Regex="&lt;instanceName&gt;.*?&lt;/instanceName&gt;" ReplacementText="&lt;instanceName&gt;$(ProductVersion)&lt;/instanceName&gt;" Condition="'$(BuildLocation)'=='INTEG' AND Exists('$(ResourcePath)\SiteConfig.xml')" />
+		<FileUpdate Files="$(ResourcePath)\SiteConfig.xml" Regex="&lt;root_location&gt;.*?\\Insyte-.*?\\" ReplacementText="&lt;root_location&gt;C:\Program Files (x86)\Aesynt\Insyte-$(ProductVersion)\" Condition="'$(BuildLocation)'=='INTEG' AND Exists('$(ResourcePath)\SiteConfig.xml')" />
+		<XmlUpdate XmlFileName="$(ResourcePath)\SiteConfig.xml" XPath="/Applications/DefaultService/root_location" Value="C:\Program Files (x86)\Aesynt\Insyte-$(ProductVersion)" Condition="'$(BuildLocation)'=='INTEG' AND Exists('$(ResourcePath)\SiteConfig.xml')" />
+	</Target>
+	
+	<Target Name="UpdateDependencies" DependsOnTargets="NugetBuildDependencies">
+		<CallTarget Targets="GetBuildFramework" />
+		<!--Target to import latest libraries from other McKesson projects-->
+			
+		<RemoveDir Directories="$(ProjectBase)\source\packages" ContinueOnError="WarnAndContinue" />
+		<Exec Command="npm set registry https://registry.npmjs.org/" IgnoreExitCode="False" WorkingDirectory="$(SourcePath)\"/>
+		<Exec Command="npm install -g @angular/cli" IgnoreExitCode="False" WorkingDirectory="$(SourcePath)"/>
+		<Exec Command="npm i" IgnoreExitCode="False" WorkingDirectory="$(SourcePath)"/>			 
+		<Message Text="team city agent name = $(agent_name)"/>
+		
+		<!--<CallTarget Targets="DownloadArtifacts"/>-->
+	</Target>
+	
+	
+	<Target Name="CustomCreateSDK">
+		<WriteLinesToFile
+            File="$(OutputFolder)\sdk_version.txt"
+            Lines="$(ProjectName) - $(AppVersion)"
+            Overwrite="true"/>
+		<CallTarget Targets="SetZipSDKFiles" />	
+		<CallTarget Targets="DoZip" />	
+	</Target>
+	<Target Name="CCInteg" DependsOnTargets="CleanOutput;SetIntegProperties;UpdateDependencies;PublishBuildInfo;CompileCode;CopyResourceFiles;CreateSDK;PublishSuccessfulBuild">
+			<Message Text="*** Build Complete - Deleting Temp Folder ***" />
+    <OnError ExecuteTargets="PublishFailedBuild" />
+	</Target>
+	
+	<Target Name="SetResourceFiles">
+		<ItemGroup>
+			<ResourceFiles Include="$(ProjectBase)\resource\**\*.*"/>
+			<JsFiles Include="$(ProjectBase)\source\dist\**\*.*" />
+		</ItemGroup>
+	</Target>
+	
+	<Target Name = "ExecuteATCI" DependsOnTargets="GetBuildVersion">
+    <OnError ExecuteTargets="TearDownAT" />
+  </Target>	
+	
+	<Target Name="CopyResourceFiles">
+		<CallTarget Targets="SetResourceFiles" />
+		<CallTarget Targets="DoCopy" />
+	</Target>
+	<Target Name="DoCopy">
+			<Copy
+				SourceFiles="@(ResouceFiles)"
+				DestinationFiles="@(ResourceFiles->'$(OutputFolder)\%(RecursiveDir)%(Filename)%(Extension)')"			/>
+			
+			<Message Text="Source Files  = @(JsFiles)" /> 
+			
+			<Message Text="Output Folder  = $(OutputFolder)" />
+			
+			<Copy
+				SourceFiles="@(JsFiles)"
+				DestinationFiles="@(JsFiles->'$(OutputFolder)\CAP-UserManagement.Web\%(RecursiveDir)%(Filename)%(Extension)')" />
+	  
+			<Copy
+				SourceFiles="@(MMSourceFiles)"
+				DestinationFiles="@(MMSourceFiles->'$(OutputFolder)\%(Name)%(Extension)')"/>	
+	</Target>
+	
+	<Target Name="CopyTestFiles">
+		<Copy
+			SourceFiles="@(TestFiles)"
+			DestinationFiles="@(TestFiles->'$(OutputFolder)\testsresults\%(RecursiveDir)%(Filename)%(Extension)')" />	
+	</Target>		
+		
+  	<Target Name="SetZipSDKFiles" >
+		<ItemGroup>
+			<SDKFiles Include="$(OutputFolder)\*.dll;
+                      $(OutputFolder)\*.exe;
+                      $(OutputFolder)\*.config;
+                      $(OutputFolder)\*.pdb;
+                      $(OutputFolder)\sdk_version.txt"/>
+			<WebRoots Include="$(OutputFolder)\CAP-UserManagement.Web\**\*.*"/>
+		</ItemGroup>
+		
+	</Target>  
+	
+	<Target Name="DoZip">
+		<MakeDir Directories="$(ArtifactsDir)\Build $(ProductVersion)\Sites"/>
+  		<Zip WorkingDirectory="$(OutputFolder)\CAP-UserManagement.Web" Files="@(WebRoots)" ZipFileName="$(ArtifactsDir)\Build $(ProductVersion)\Sites\$(ProjectName).zip" />
+		<Zip WorkingDirectory="$(OutputFolder)\CAP-UserManagement.Web" Files="$(SourcePath)\source\e2e\testresults\**\*.*" ZipFileName="$(ArtifactsDir)\Build $(ProductVersion)\Sites\$(ProjectName)-Protractor.zip" />
+	</Target>
+	
+	
+	<UsingTask AssemblyFile="$(MSBuildCommunityTasksLib)" TaskName="MSBuild.Community.Tasks.Zip" />
+
+	<Target Name="RunSonarCI" DependsOnTargets="UpdateVersionProperties;UpdateDependencies;RunSonar">
+		<Message Text="*** Build Complete ***" />
+	</Target>
+	
+	<Target Name="RunSonar">
+		<PropertyGroup>
+			<RegisterUser Condition="'$(BuildLocation)'=='local'">User</RegisterUser>
+			<RegisterUser Condition="'$(BuildLocation)'!='local'">CentralBuildUser</RegisterUser>
+		</PropertyGroup>
+	    <RemoveDir Directories="$(SourcePath)\coverage" />
+		
+		<FileUpdate Files="$(SourcePath)\analyse.js"
+      		Regex="#{projectVersion}"
+      		ReplacementText="$(ProductVersion)" />
+		<FileUpdate Files="$(SourcePath)\analyse.js"
+      		Regex="#{targetBranch}"
+      		ReplacementText="$(Branch)" />
+
+		<Exec Command="ng test --karma-config karma.teamcity.conf.js --browsers ChromeHeadless --code-coverage --watch false" WorkingDirectory="$(SourcePath)" />
+		<Exec Command="node analyse.js" WorkingDirectory="$(SourcePath)"/>
+	</Target>	
+</Project>

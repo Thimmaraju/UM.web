@@ -1,0 +1,34 @@
+// primary
+$color-primary-slate: #5E6A71;
+
+// secondary
+$color-secondary-green: #69BE28;
+$color-secondary-blue: #97C0E6;
+$color-secondary-blue-green: #8B979E;
+$color-secondary-bahama-blue: #006699;
+$color-secondary-stat-red: #C70719;
+$color-secondary-vidid-orange: #E89C0C;
+$color-secondary-logo-dark-grey: #52524A;
+
+// tertiary
+$color-tertiary-grey: #999999;
+
+// colors
+$color-white: #fff;
+$color-button-add: #6699CC;
+$color-black: #000000;
+
+// font
+$default-font-size: 1.4rem;
+$page-title-font-size: 1.8rem;
+
+// breakpoints
+$toolbar-breakpoint: 600px;
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 1100px, // 992px,
+  xl: 1500px // 1200px
+)

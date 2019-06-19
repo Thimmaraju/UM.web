@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites>
+ <testsuite name="Create Hospital Users" timestamp="2019-04-30T18:45:30" hostname="localhost" time="65.621" errors="0" tests="6" skipped="5" failures="0">
+  <testcase classname="Create Hospital Users" name="Create new hospital user administrator" time="0.005"><skipped />
+  </testcase>
+  <testcase classname="Create Hospital Users" name="Create new hospital pharm admin" time="0.001"><skipped />
+  </testcase>
+  <testcase classname="Create Hospital Users" name="Create new hospital pharm technician" time="0"><skipped />
+  </testcase>
+  <testcase classname="Create Hospital Users" name="Create new hospital user with all roles" time="0.001"><skipped />
+  </testcase>
+  <testcase classname="Create Hospital Users" name="Create new hospital user with user admin and pharm admin roles" time="0"><skipped />
+  </testcase>
+  <testcase classname="Create Hospital Users" name="User should not be able to create a user without username" time="65.609">
+  </testcase>
+ </testsuite>
+</testsuites>

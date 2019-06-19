@@ -1,0 +1,25 @@
+*,
+*::after,
+*::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+    a:hover, a:active, a:focus {
+      text-decoration: none;
+    }
+
+    &:active, :focus {
+      outline: none !important;
+    }
+}
+
+html {
+    // This defines what 1rem is
+    font-size: 62.5%;
+    height: 100%;
+}
+
+body {
+    // box-sizing: border-box;
+    // height: 100%;
+}

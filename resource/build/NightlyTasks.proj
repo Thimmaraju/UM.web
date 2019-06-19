@@ -1,0 +1,119 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <StoryTellerCoverageResultsFile>$(OutputFolder)\$(ProjectName)-$(AppVersion)-StoryTeller.coverage</StoryTellerCoverageResultsFile>
+    <UnitTestsCoverageResultsFile>$(OutputFolder)\$(ProjectName)-$(AppVersion)-Unit.coverage</UnitTestsCoverageResultsFile>
+    <CodeHealthConnectionString>Server=Dev-DB08;Database=CodeHealthMetrics;User Id=TestUser;Password=5ync1@@!;</CodeHealthConnectionString>
+    <NightlyBuildVersion>Nightly</NightlyBuildVersion>
+    <SourceMonitorPath>$(ToolsPath)\SourceMonitor</SourceMonitorPath>
+    <SourceMonitorInput>$(OutputFolder)\SourceMonitor.xml</SourceMonitorInput>
+    <SourceMonitorProjectName>CodeMetrics.smp</SourceMonitorProjectName>
+    <SourceMonitorProject>$(OutputFolder)\$(SourceMonitorProjectName)</SourceMonitorProject>
+    <SourceMonitorDir>$(MSBuildProjectDirectory)\</SourceMonitorDir>
+    <SourceMonitorSummary>$(OutputFolder)\$(ProjectName)-$(AppVersion)-SourceMonitorSummary.xml</SourceMonitorSummary>
+    <SourceMonitorDetails>$(OutputFolder)\$(ProjectName)-$(AppVersion)-SourceMonitorDetails.xml</SourceMonitorDetails>
+    <SourceMonitorCheckPointName>$(ProjectName)-$(AppVersion)</SourceMonitorCheckPointName>
+    <SourceMonitorText> <![CDATA[ <?xml version="1.0" encoding="UTF-8" ?> <sourcemonitor_commands>     <write_log>true</write_log>     <command>         <project_file>$(SourceMonitorProject)</project_file>         <project_language>CSharp</project_language>         <source_directory>$(SourceMonitorDir)</source_directory>         <include_subdirectories>true</include_subdirectories>         <ignore_headers_footers>true</ignore_headers_footers>         <checkpoint_name>$(SourceMonitorCheckPointName)</checkpoint_name>         <export>             <export_file>$(SourceMonitorSummary)</export_file>             <export_type>1</export_type>         </export>     </command>     <command>     <project_file>$(SourceMonitorProject)</project_file>     <checkpoint_name>$(SourceMonitorCheckPointName)</checkpoint_name>         <export>             <export_file>$(SourceMonitorDetails)</export_file>             <export_type>2</export_type>         </export>     </command> </sourcemonitor_commands>         ]]></SourceMonitorText>
+  </PropertyGroup>
+
+  <Target Name="CIBuild" DependsOnTargets="GetBuildVersion;ExecuteCodeMetrics;ExecuteTestsWithCodeCoverage;JoinCoverageFiles;ExecuteTestsWithPerfLogging">
+
+  </Target>
+
+  <Target Name="ExecuteTestsWithCodeCoverage" >
+    <MSBuild Projects="$(ResourcePath)\Build\UnitTests.proj"
+             Targets="RunTestsWithCoverage"
+            Properties="$(BuildProperties);AppVersion=$(NightlyBuildVersion);CodeCoverageResultsFile=$(UnitTestsCoverageResultsFile)"/>
+    <MSBuild Projects="$(ResourcePath)\Build\AutomatedTests.proj"
+			      Targets="Setup"
+            Properties="$(BuildProperties);AppVersion=$(NightlyBuildVersion);ExecutionWorkingDir=$(OutputFolder);CodeCoverageResultsFile=$(StoryTellerCoverageResultsFile)"/>
+    <MSBuild Projects="$(ResourcePath)\Build\AutomatedTests.proj"
+			      Targets="ExecuteTestsWithCodeCoverage"
+            Properties="$(BuildProperties);AppVersion=$(NightlyBuildVersion);ExecutionWorkingDir=$(OutputFolder);CodeCoverageResultsFile=$(StoryTellerCoverageResultsFile)"/>
+    <MSBuild Projects="$(ResourcePath)\Build\AutomatedTests.proj"
+			      Targets="Teardown"
+            Properties="$(BuildProperties);AppVersion=$(NightlyBuildVersion);ExecutionWorkingDir=$(OutputFolder);CodeCoverageResultsFile=$(StoryTellerCoverageResultsFile)"/>
+  </Target>
+
+  <Target Name="ExecuteTestsWithPerfLogging" >
+    <ItemGroup>
+      <PerfLogs Include="$(OutputFolder)\.net_performance_log*.*"/>
+    </ItemGroup>
+    <RemoveDir Directories="$(ExecutionWorkingDir)\Results" />
+    <Delete Files="@PerfLogs"/>
+    
+    <Copy SourceFiles="$(ProjectBase)\Docs\QA\Standard Db\DOSE_DATA_seed.bak" DestinationFolder="$(OutputFolder)"/>
+    <Copy SourceFiles="$(ProjectBase)\Docs\QA\Standard Db\RestoreAutomatedTestDB.sql" DestinationFolder="$(OutputFolder)"/>
+    <Copy SourceFiles="$(ProjectBase)\Docs\QA\Standard Db\fix_crxadmin.sql" DestinationFolder="$(OutputFolder)"/>
+    
+    <MSBuild Projects="$(ResourcePath)\Build\AutomatedTests.proj"
+			  Targets="Setup"
+        Properties="$(BuildProperties);AppVersion=$(NightlyBuildVersion)-PL;ExecutionWorkingDir=$(OutputFolder)"/>
+    <MSBuild Projects="$(ResourcePath)\Build\AutomatedTests.proj"
+        Targets="StartLogMan"
+        Properties="$(BuildProperties);AppVersion=$(NightlyBuildVersion)-PL;ExecutionWorkingDir=$(OutputFolder)"/>    
+    <MSBuild Projects="$(ResourcePath)\Build\AutomatedTests.proj"
+			  Targets="ExecuteTests"
+        Properties="$(BuildProperties);AppVersion=$(NightlyBuildVersion)-PL;ExecutionWorkingDir=$(OutputFolder)"/>
+    <MSBuild Projects="$(ResourcePath)\Build\AutomatedTests.proj"
+			  Targets="StopLogMan"
+        Properties="$(BuildProperties);AppVersion=$(NightlyBuildVersion)-PL;ExecutionWorkingDir=$(OutputFolder)"/>
+    <MSBuild Projects="$(ResourcePath)\Build\AutomatedTests.proj"
+			  Targets="Teardown"
+        Properties="$(BuildProperties);AppVersion=$(NightlyBuildVersion)-PL;ExecutionWorkingDir=$(OutputFolder)"/>
+    <MSBuild Projects="$(ResourcePath)\Build\AutomatedTests.proj"
+        Targets="LogParser"
+        Properties="$(BuildProperties);AppVersion=$(NightlyBuildVersion)-PL;ExecutionWorkingDir=$(OutputFolder)"/>
+    <MSBuild Projects="$(ResourcePath)\Build\AutomatedTests.proj"
+        Targets="ExportPerf"
+        Properties="$(BuildProperties);AppVersion=$(NightlyBuildVersion)-PL;ExecutionWorkingDir=$(OutputFolder)"/>
+  </Target>
+  
+  <Target Name = "JoinCoverageFiles">
+    <JoinCodeCoverage
+      Directories="$(OutputFolder)"
+				CoverageResultsFiles="$(StoryTellerCoverageResultsFile);$(UnitTestsCoverageResultsFile)"
+				FileNameRegEx="McK."
+				ProjectName="$(ProjectName)"
+				ReleaseName="$(ReleaseName)"
+				BuildVersion="$(NightlyBuildVersion)"
+				ConnectionString="$(CodeHealthConnectionString)"
+      />
+  </Target>
+
+  <Target Name="ExecuteCodeMetrics">
+
+    <Copy
+      SourceFiles="$(ProjectBase)\Docs\Metrics\$(SourceMonitorProjectName)"
+      DestinationFolder="$(OutputFolder)" />
+
+    <WriteLinesToFile
+      File="$(SourceMonitorInput)"
+      Lines="$(SourceMonitorText)"
+      Overwrite="true" />
+
+    <Exec Command="$(SourceMonitorPath)\sourcemonitor.exe /C $(SourceMonitorInput)" />
+
+    <PublishCodeMetrics
+			ProjectName="$(ProjectName)"
+			ReleaseName="$(ReleaseName)"
+			BuildVersion="$(NightlyBuildVersion)"
+			ConnectionString="$(CodeHealthConnectionString)"
+      SourceMonitorSummary="$(SourceMonitorSummary)"
+      SourceMonitorDetails="$(SourceMonitorDetails)"
+      />
+
+  </Target>
+
+  <Target Name="GetBuildVersion">
+    <GetLatestBuildArtifacts ArtifactRoot="$(ProjectBase)\Build\Release">
+      <Output TaskParameter="LatestArtifactPath" PropertyName="BuildPath" />
+      <Output TaskParameter="ApplicationVersion" PropertyName="NightlyBuildVersion" />
+    </GetLatestBuildArtifacts>
+    <Message Text="*** NightlyBuildVersion set to $(NightlyBuildVersion) ***" />
+  </Target>
+
+  <UsingTask TaskName="CodeHealthTasks.PublishCodeMetrics" AssemblyFile="$(ToolsPath)\CodeHealthTasks.dll"/>
+  <UsingTask TaskName="CodeHealthTasks.JoinCodeCoverage" AssemblyFile="$(ToolsPath)\CodeHealthTasks.dll"/>
+  <UsingTask TaskName="CBPBuildTasks.GetLatestBuildArtifacts" AssemblyFile="$(ToolsPath)\CBPBuildTasks.dll"/>
+</Project>
